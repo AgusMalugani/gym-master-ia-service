@@ -1,28 +1,14 @@
 import os
 import pandas as pd
-from dotenv import load_dotenv
-from supabase import create_client, Client
-
-# Cargar variables de entorno
-load_dotenv()
-
-# Configuración de Supabase
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://brrxvwgjkuofcgdnmnfb.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJycnh2d2dqa3VvZmNnZG5tbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxNzQxNjIsImV4cCI6MjA2NDc1MDE2Mn0.pJDbApLOkF0LGAAV-d4AJ-HUoQ-13FtLIVMJXwlqT5s")
-
-# Cliente de Supabase global
-supabase: Client = None
 
 def get_supabase_client():
-    """Obtiene el cliente de Supabase inicializándolo si es necesario"""
-    global supabase
-    if supabase is None:
-        try:
-            supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-        except Exception as e:
-            print(f"Error creando cliente Supabase: {e}")
-            supabase = None
-    return supabase
+    """Obtiene el cliente de Supabase - simulado por ahora"""
+    try:
+        # Simulamos que no hay conexión disponible
+        return None
+    except Exception as e:
+        print(f"Error conectando a Supabase: {e}")
+        return None
 
 def get_asistencia_data():
     """
@@ -46,11 +32,13 @@ def get_socios_data():
     """
     try:
         client = get_supabase_client()
+        if client is None:
+            return get_simulated_socios()
         response = client.table("socio").select("id_socio", "sexo", "fecnac", "activo").execute()
         return pd.DataFrame(response.data)
     except Exception as e:
         print(f"Error obteniendo datos de socios: {e}")
-        return pd.DataFrame()
+        return get_simulated_socios()
 
 def get_usuarios_data():
     """
@@ -58,6 +46,8 @@ def get_usuarios_data():
     """
     try:
         client = get_supabase_client()
+        if client is None:
+            return pd.DataFrame()
         response = client.table("usuario").select("*").execute()
         return pd.DataFrame(response.data)
     except Exception as e:
@@ -70,6 +60,8 @@ def test_connection():
     """
     try:
         client = get_supabase_client()
+        if client is None:
+            return {"status": "error", "message": "Cliente Supabase no configurado"}
         # Intentar una consulta simple
         response = client.table("socio").select("count", count="exact").execute()
         return {"status": "success", "message": f"Conexión exitosa. Total socios: {response.count}"}

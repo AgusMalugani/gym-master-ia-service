@@ -1,0 +1,2 @@
+id,socio_id,cuota_id,fecha_pago,monto_pagado,total,registrado_por,creado_en,actualizado_en,fecha_limite,enviar_email,dias_retraso
+6b1d1b52-3e19-49a1-bcb5-dca4a2e4bdcb,ee59a685-6c32-4181-8315-2fd19df24021,d5e2d84a-18f7-4e3e-ad11-b85dafecd3e8,2025-07-06,400.0,400.0,47b74f1f-d29e-4d7d-baaa-e1ee065d5c76,2025-07-06T15:26:36.975137,2025-07-06T15:50:04.216866,2025-06-27,False,9
