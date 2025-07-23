@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: gymmaster-ia-service
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: API_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.0
