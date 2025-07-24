@@ -1,12 +1,17 @@
+import os
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import logging
-import pandas as pd
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO)
+# Configurar logging para producción
+log_level = os.environ.get("LOG_LEVEL", "INFO")
+logging.basicConfig(
+    level=getattr(logging, log_level.upper()),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 # Importamos los módulos de IA
@@ -251,5 +256,15 @@ async def global_exception_handler(request, exc):
     )
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    
+    logger.info(f"🚀 Iniciando GymMaster IA Service en {host}:{port}")
+    
+    uvicorn.run(
+        app, 
+        host=host, 
+        port=port,
+        log_level="info",
+        access_log=True
+    )

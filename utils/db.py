@@ -1,10 +1,28 @@
 import os
 import pandas as pd
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 def get_supabase_client():
-    """Obtiene el cliente de Supabase - simulado por ahora"""
+    """Obtiene el cliente de Supabase"""
     try:
-        # Simulamos que no hay conexión disponible
+        from supabase import create_client, Client
+        
+        # Configuración desde variables de entorno
+        SUPABASE_URL = os.getenv("SUPABASE_URL")
+        SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+        
+        if SUPABASE_URL and SUPABASE_KEY:
+            client = create_client(SUPABASE_URL, SUPABASE_KEY)
+            return client
+        else:
+            print("Variables de entorno SUPABASE_URL o SUPABASE_KEY no configuradas")
+            return None
+            
+    except ImportError:
+        print("Módulo supabase no instalado")
         return None
     except Exception as e:
         print(f"Error conectando a Supabase: {e}")
