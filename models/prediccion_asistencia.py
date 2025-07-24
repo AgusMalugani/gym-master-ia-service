@@ -14,8 +14,13 @@ def run():
     Ejecuta el análisis de predicción de asistencia usando los nuevos datos
     """
     try:
-        # Cargar los nuevos datasets
-        base_path = os.path.join(PROJECT_ROOT, 'ia', 'data_science', 'Data_Lake_CSV')
+        # Cargar los nuevos datasets - RUTA CORREGIDA
+        base_path = os.path.join(PROJECT_ROOT, 'ia', 'Data_Lake_CSV')
+        
+        # Debug: Verificar rutas
+        print(f"🔍 PROJECT_ROOT: {PROJECT_ROOT}")
+        print(f"📁 Base path: {base_path}")
+        print(f"📂 Existe base_path? {os.path.exists(base_path)}")
         
         resultados = {
             "status": "success",
@@ -26,14 +31,19 @@ def run():
         
         # 1. Análisis de probabilidad de churn
         churn_path = os.path.join(base_path, 'probabilidad_churn.csv')
+        print(f"🎯 Buscando churn en: {churn_path}")
+        print(f"✅ Existe archivo churn? {os.path.exists(churn_path)}")
+        
         if os.path.exists(churn_path):
             churn_df = pd.read_csv(churn_path)
+            print(f"📊 Cargados {len(churn_df)} registros de churn")
+            print(f"🔍 Columnas disponibles: {list(churn_df.columns)}")
             
-            # Calcular estadísticas de riesgo de abandono
+            # Calcular estadísticas de riesgo de abandono - CAMPO CORREGIDO
             total_socios = len(churn_df)
-            alto_riesgo = len(churn_df[churn_df.get('probabilidad_churn', 0) > 0.7])
-            medio_riesgo = len(churn_df[(churn_df.get('probabilidad_churn', 0) > 0.4) & 
-                                      (churn_df.get('probabilidad_churn', 0) <= 0.7)])
+            alto_riesgo = len(churn_df[churn_df.get('prob_churn', 0) > 0.7])
+            medio_riesgo = len(churn_df[(churn_df.get('prob_churn', 0) > 0.4) & 
+                                      (churn_df.get('prob_churn', 0) <= 0.7)])
             bajo_riesgo = total_socios - alto_riesgo - medio_riesgo
             
             resultados["analisis_churn"] = {
@@ -50,8 +60,12 @@ def run():
         
         # 2. Análisis de segmentación de socios
         segmentacion_path = os.path.join(base_path, 'segmentacion_socios.csv')
+        print(f"👥 Buscando segmentación en: {segmentacion_path}")
+        print(f"✅ Existe archivo segmentación? {os.path.exists(segmentacion_path)}")
+        
         if os.path.exists(segmentacion_path):
             segmentacion_df = pd.read_csv(segmentacion_path)
+            print(f"📊 Cargados {len(segmentacion_df)} registros de segmentación")
             
             # Análisis por segmento de pago
             segmentos = segmentacion_df.get('segmento_pago', pd.Series()).value_counts()
@@ -67,8 +81,12 @@ def run():
         
         # 3. Top 5 socios inactivos
         top5_inactivos_path = os.path.join(base_path, 'top5_socios_inactivos.csv')
+        print(f"🚨 Buscando top 5 inactivos en: {top5_inactivos_path}")
+        print(f"✅ Existe archivo top5? {os.path.exists(top5_inactivos_path)}")
+        
         if os.path.exists(top5_inactivos_path):
             top5_df = pd.read_csv(top5_inactivos_path)
+            print(f"📊 Cargados {len(top5_df)} registros de socios inactivos")
             
             resultados["socios_criticos"] = {
                 "total_inactivos_criticos": int(len(top5_df)),

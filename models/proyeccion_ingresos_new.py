@@ -45,8 +45,8 @@ def run():
             pagos_df['fecha_pago'] = pd.to_datetime(pagos_df['fecha_pago'])
             
             # Calcular métricas de ingresos reales
-            ingresos_totales = pagos_df['monto_pagado'].sum() if 'monto_pagado' in pagos_df.columns else 0
-            promedio_mensual = pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto_pagado'].sum().mean() if len(pagos_df) > 0 else 0
+            ingresos_totales = pagos_df['monto'].sum() if 'monto' in pagos_df.columns else 0
+            promedio_mensual = pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto'].sum().mean() if len(pagos_df) > 0 else 0
             
             resultados["ingresos_reales"] = {
                 "total_periodo": float(ingresos_totales),
@@ -69,8 +69,8 @@ def run():
                 print(f"📊 Cargados {len(pagos_df)} registros simulados")
                 
                 resultados["ingresos_reales"] = {
-                    "total_periodo": float(pagos_df['monto_pagado'].sum()),
-                    "promedio_mensual": float(pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto_pagado'].sum().mean()),
+                    "total_periodo": float(pagos_df['monto'].sum()),
+                    "promedio_mensual": float(pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto'].sum().mean()),
                     "total_transacciones": int(len(pagos_df)),
                     "socios_activos_pago": int(pagos_df['socio_id'].nunique()),
                     "fuente": "Datos simulados"
@@ -108,7 +108,7 @@ def run():
             meses_proyeccion = 6
             
             # Calcular estadísticas base
-            ingresos_mensuales = pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto_pagado'].sum()
+            ingresos_mensuales = pagos_df.groupby(pagos_df['fecha_pago'].dt.to_period('M'))['monto'].sum()
             media_mensual = ingresos_mensuales.mean()
             std_mensual = ingresos_mensuales.std()
             
